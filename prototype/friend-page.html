@@ -1,0 +1,133 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Page ami</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="img/favicon.png">
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/timeline.css" rel="stylesheet">
+    <link href="css/profile_wall.css" rel="stylesheet">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body class="animated fadeIn">
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top navbar-principal">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="profile.html">
+                    <b>Réseau Social</b>
+                </a>
+            </div>
+            <div id="navbar" class="collapse navbar-collapse">
+              <!-- SOURCE : http://getbootstrap.com/components/ -->
+              <div class="col-lg-6">
+                <div class="input-group">
+                  <input type="text" class="form-control" placeholder="Rechercher...">
+                  <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" onclick="window.location.href='friend_search.html'">GO!</button>
+                  </span>
+                </div>
+              </div>
+              <!-- /SOURCE -->
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="active">
+                        <a href="profile.html">
+                            Pierre-Luc Delisle
+                            <img src="img/businessman.png" class="img-nav" alt="">
+                        </a>
+                    </li>
+                    <li><a href="#"><i class="fa fa-bell"></i></a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">	Pages
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="profile.html">Profile</a></li>
+                            <li><a href="tickets.html">Billets</a></li>
+                            <li><a href="profile_settings.html">Paramètres du compte</a></li>
+                            <li><a href="passwordReset.html">Modifier mot de passe</a></li>
+                            <li><a href="login.html"><i class="fa fa-sign-out"></i> Déconnection</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="row text-center color-container" style="margin-top: 50px;">
+        <img src="http://bootdey.com/img/Content/user_3.jpg" alt="avatar" class="avatar">
+        <h1>Jonathan Smith</h1>
+        <h4><a href="#"><i class="fa fa-user-plus" title="Ajouter à votre liste d'ami"></i></a> <a href="#"><i class="fa fa-times" title="Retirer de votre liste d'ami"></i></a></h4>
+    </div>
+
+
+    <!-- Timeline content -->
+    <div class="container" style="margin-top:55px;max-width:1000px">
+
+        <div class="panel">
+          <div class="panel-body">
+              <div class="profile-wall-user-thumb">
+                  <img src="http://bootdey.com/img/Content/user_3.jpg" alt="">
+              </div>
+              <div class="profile-wall-user-details">
+                  <h3><a href="#" class="#">Jonathan Smith</a></h3>
+                  <p>23 Janvier 2017</p>
+              </div>
+              <div class="clearfix"></div>
+              <h3>2 billets achetés pour Imagine Dragon</h3>
+              <p>Centre Bell le 6 Septembre 2017</p>
+              <div class="rounded mx-auto d-block">
+                  <img src="img/imagine-dragons.jpg" class="image show-in-modal" alt="image post">
+              </div>
+          </div>
+
+        </div>
+
+        <div class="panel">
+          <div class="panel-body">
+              <div class="profile-wall-user-thumb">
+                  <img src="http://bootdey.com/img/Content/user_3.jpg" alt="">
+              </div>
+              <div class="profile-wall-user-details">
+                  <h3><a href="#" class="#">Jonathan Smith</a></h3>
+                  <p>23 Janvier 2017</p>
+              </div>
+              <div class="clearfix"></div>
+              <h3>4 billets achetés pour Metallica</h3>
+              <p>Centre Bell le 16 mai 2016</p>
+              <div class="img-fluid">
+                  <img src="img/metalica.jpg" class="image show-in-modal" alt="image post">
+              </div>
+          </div>
+        </div>
+    </div><!-- end timeline content-->
+
+
+
+    <footer class="welcome-footer">
+      <div class="container">
+        <br>
+        <p>Template utilisé: <a href="http://bootdey.com/themes/view/BookPost-Bootstrap-social-network-css-html">BookPost</a></p>
+      </div>
+    </footer>
+</body>
+</html>

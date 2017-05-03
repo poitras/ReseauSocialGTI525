@@ -1,0 +1,1142 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Social Network API",
+        "description": "The public API from the Social Network team.",
+        "contact": {
+            "name": "the GTI525 Social Network Team."
+        },
+        "license": {
+            "name": "MIT"
+        },
+        "version": "1.0.0"
+    },
+    "host": "https://gti525-social-network.herokuapp.com/",
+    "basePath": "/api/v1",
+    "schemes": [
+        "http"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/oauth/authorize": {
+            "get": {
+                "tags": [
+                    "authentication"
+                ],
+                "summary": "Get a federation authorization.",
+                "operationId": "none",
+                "parameters": [
+                    {
+                        "name": "client_id",
+                        "in": "path",
+                        "description": "User ID of the federation authentication.",
+                        "required": true,
+                        "type": "string",
+                        "format": "utf8"
+                    },
+                    {
+                        "name": "redirect_uri",
+                        "in": "path",
+                        "description": "The redirect URI after authorization.",
+                        "required": true,
+                        "type": "string",
+                        "format": "utf8"
+                    },
+                    {
+                        "name": "response_type",
+                        "in": "path",
+                        "description": "The response type of the authorization. Here: 'code'.",
+                        "required": true,
+                        "type": "string",
+                        "format": "utf8"
+                    },
+                    {
+                        "name": "scope",
+                        "in": "path",
+                        "description": "The scope of the scope.",
+                        "required": true,
+                        "type": "string",
+                        "format": "utf8"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation.",
+                        "schema": {
+                            "$ref": "#/definitions/Authorization_Successful"
+                        }
+                    },
+                    "406": {
+                        "description": "Not acceptable."
+                    },
+                    "500": {
+                        "description": "Internal server error."
+                    }
+                }
+            }
+        },
+        "/oauth/token": {
+            "post": {
+                "tags": [
+                    "authentication"
+                ],
+                "summary": "Get a user token via authentication.",
+                "operationId": "none",
+                "parameters": [
+                    {
+                        "name": "oauth_token_request",
+                        "in": "body",
+                        "description": "An OAuth token request.",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/token_request_form"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation.",
+                        "schema": {
+                            "$ref": "#/definitions/Authorization_Successful"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request."
+                    },
+                    "401": {
+                        "description": "Unauthorized."
+                    }
+                }
+            }
+        },
+        "/user/friendship": {
+            "post": {
+                "tags": [
+                    "friendships"
+                ],
+                "summary": "Send a friend request to target user",
+                "operationId": "add_friend",
+                "parameters": [
+                    {
+                        "name": "friendship_request",
+                        "in": "body",
+                        "description": "A friendship request form.",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Friendship_form"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation.",
+                        "schema": {
+                            "$ref": "#/definitions/Friendships"
+                        }
+                    },
+                    "403": {
+                        "description": "Requester mismatch the current authenticated user.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "406": {
+                        "description": "Ticket does not belongs to you. Cannot transfer ticket.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "400": {
+                        "description": "Multiple error definitions.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/friendship/{friendship_id}": {
+            "get": {
+                "tags": [
+                    "friendships"
+                ],
+                "summary": "Display the specified friendship object.",
+                "operationId": "getFriendship",
+                "parameters": [
+                    {
+                        "name": "friendship_id",
+                        "in": "path",
+                        "description": "Target friendship ID.",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation."
+                    },
+                    "403": {
+                        "description": "You are not the requester of this friendship. You are not authorized to see it.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "friendships"
+                ],
+                "summary": "Delete a friend request from target user",
+                "operationId": "accept_friend",
+                "parameters": [
+                    {
+                        "name": "friendship_id",
+                        "in": "path",
+                        "description": "Target friend that requested the friendship",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation."
+                    },
+                    "400": {
+                        "description": "Friendship is not in a pending state.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Friendship request not found.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "friendships"
+                ],
+                "summary": "Accept friend request from target user",
+                "operationId": "accept_friend",
+                "parameters": [
+                    {
+                        "name": "friendship_id",
+                        "in": "path",
+                        "description": "Target friend that requested the friendship",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation."
+                    },
+                    "400": {
+                        "description": "Friendship already accepted.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Friendship request not found.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/friendships/pending/received": {
+            "get": {
+                "tags": [
+                    "friendships"
+                ],
+                "summary": "Return the users from which the authenticated user has pending friend requests.",
+                "operationId": "getPendingFriendRequestsReceived",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation.",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "properties": {
+                                    "id": {
+                                        "type": "integer"
+                                    },
+                                    "first_name": {
+                                        "type": "string"
+                                    },
+                                    "last_name": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "address": {
+                                        "type": "string"
+                                    },
+                                    "city": {
+                                        "type": "string"
+                                    },
+                                    "province": {
+                                        "type": "string"
+                                    },
+                                    "postal_code": {
+                                        "type": "string"
+                                    },
+                                    "avatar": {
+                                        "type": "string"
+                                    },
+                                    "created_at": {
+                                        "type": "date"
+                                    },
+                                    "updated_at": {
+                                        "type": "date"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "You have no incoming pending friendship request.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/friendships/pending/sent": {
+            "get": {
+                "tags": [
+                    "friendships"
+                ],
+                "summary": "Return the users for which the authenticated user has sent friend requests.",
+                "operationId": "getPendingFriendRequestSent",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation.",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "properties": {
+                                    "id": {
+                                        "type": "integer"
+                                    },
+                                    "first_name": {
+                                        "type": "string"
+                                    },
+                                    "last_name": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "address": {
+                                        "type": "string"
+                                    },
+                                    "city": {
+                                        "type": "string"
+                                    },
+                                    "province": {
+                                        "type": "string"
+                                    },
+                                    "postal_code": {
+                                        "type": "string"
+                                    },
+                                    "avatar": {
+                                        "type": "string"
+                                    },
+                                    "created_at": {
+                                        "type": "date"
+                                    },
+                                    "updated_at": {
+                                        "type": "date"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "You have not sent any friendship request.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/friends": {
+            "get": {
+                "tags": [
+                    "friends"
+                ],
+                "summary": "Return the users that you are friend with.",
+                "operationId": "getFriends",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation.",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "properties": {
+                                    "id": {
+                                        "type": "integer"
+                                    },
+                                    "first_name": {
+                                        "type": "string"
+                                    },
+                                    "last_name": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "address": {
+                                        "type": "string"
+                                    },
+                                    "city": {
+                                        "type": "string"
+                                    },
+                                    "province": {
+                                        "type": "string"
+                                    },
+                                    "postal_code": {
+                                        "type": "string"
+                                    },
+                                    "avatar": {
+                                        "type": "string"
+                                    },
+                                    "created_at": {
+                                        "type": "date"
+                                    },
+                                    "updated_at": {
+                                        "type": "date"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "There are no accepted friends."
+                    }
+                }
+            }
+        },
+        "/user/friend/{friend_id}": {
+            "get": {
+                "tags": [
+                    "friends"
+                ],
+                "summary": "Return the specified user if this user is a friend.",
+                "operationId": "getFriend",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation.",
+                        "schema": {
+                            "items": {
+                                "properties": {
+                                    "id": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "You are not friend with this user.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "The specified user does not exist.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "friends"
+                ],
+                "summary": "Remove an existing friendship between authenticated user and target user.",
+                "operationId": "remove_friendship",
+                "responses": {
+                    "200": {
+                        "description": "Request successful. User has been removed from friend list."
+                    },
+                    "404": {
+                        "description": "Friend or friendship not found.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/friends/ids": {
+            "get": {
+                "tags": [
+                    "friends"
+                ],
+                "summary": "Return a list of a friend's ID.",
+                "operationId": "friends_ids",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation.",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "properties": {
+                                    "user_id": {
+                                        "type": "integer"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "Successful operation.",
+                        "schema": {
+                            "$ref": "#/definitions/Ticket"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/isFriend/{user_id}": {
+            "get": {
+                "tags": [
+                    "friends"
+                ],
+                "summary": "Return if a user is a friend or not.",
+                "operationId": "is_friends_with",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation.",
+                        "schema": {
+                            "properties": {
+                                "is_friend": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "404": {
+                        "description": "Specified user not found.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/friendships/pending/userIDs": {
+            "get": {
+                "tags": [
+                    "friendships"
+                ],
+                "summary": "Return a list of id of the pending friends of a user.",
+                "operationId": "pending_friend_request_ids",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation.",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "properties": {
+                                    "id": {
+                                        "type": "integer"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/friendships/pending/from/{target_user_id}": {
+            "get": {
+                "tags": [
+                    "friendships"
+                ],
+                "summary": "Return if the authenticated user has a pending request from a target user.",
+                "operationId": "has_pending_friend_request_from",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation.",
+                        "schema": {
+                            "properties": {
+                                "has_pending_friend_request": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "404": {
+                        "description": "Specified user not found.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/friendships/pending/sent/{target_user_id}": {
+            "get": {
+                "tags": [
+                    "friendships"
+                ],
+                "summary": "Return if authenticated user has a pending request sent to target user.",
+                "operationId": "has_pending_friend_request_sent_to",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation.",
+                        "schema": {
+                            "properties": {
+                                "has_pending_friend_request": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "404": {
+                        "description": "Specified user not found.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/friendships/pending/ids/sent": {
+            "get": {
+                "tags": [
+                    "friendships"
+                ],
+                "summary": "Return a list of id of the pending friendship requests sent by the authenticated user.",
+                "operationId": "pending_friend_request_ids",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation.",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "properties": {
+                                    "id": {
+                                        "type": "integer"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/tickets": {
+            "get": {
+                "tags": [
+                    "tickets"
+                ],
+                "summary": "List all tickets of an authenticated user.",
+                "operationId": "getTickets",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation.",
+                        "schema": {
+                            "$ref": "#/definitions/Ticket"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "tickets"
+                ],
+                "summary": "Add one or multiple tickets to authenticated user.",
+                "operationId": "addTicket",
+                "parameters": [
+                    {
+                        "name": "ticket",
+                        "in": "body",
+                        "description": "A ticket to add to a user.",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/TicketPost"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Resource created.",
+                        "schema": {
+                            "$ref": "#/definitions/Ticket"
+                        }
+                    },
+                    "404": {
+                        "description": "User not found.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/ticket/{ticket_ID}": {
+            "get": {
+                "tags": [
+                    "tickets"
+                ],
+                "summary": "Show a specific ticket belonging to a specific authenticated user.",
+                "operationId": "getTicket",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "ticket_ID",
+                        "in": "path",
+                        "description": "Target ticket.",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation.",
+                        "schema": {
+                            "$ref": "#/definitions/Ticket"
+                        }
+                    },
+                    "404": {
+                        "description": "Ticket not found.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/ticket/{unique_ticket_id}/owner/{new_user_id}": {
+            "patch": {
+                "tags": [
+                    "tickets"
+                ],
+                "summary": "Change owner of a ticket_id to the selected user_id",
+                "operationId": "transferTicket",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "unique_ticket_id",
+                        "in": "path",
+                        "description": "The unique ID of a ticket.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "new_user_id",
+                        "in": "path",
+                        "description": "The user ID to which we want to transfer ticket.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation.",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Ticket"
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Ticket does not belongs to you. Cannot transfer ticket.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "400": {
+                        "description": "Ticket or user not found. Cannot transfer ticket.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/{friend_ID}/tickets": {
+            "get": {
+                "tags": [
+                    "tickets"
+                ],
+                "summary": "Show the list of friend's tickets.",
+                "operationId": "getFriendTicket",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "friend_ID",
+                        "in": "path",
+                        "description": "Target friend.",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation.",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Ticket"
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "You are not friend with this person. You cannot retrieve its tickets.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/users": {
+            "get": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Show all users present in the social network database.",
+                "operationId": "getUsers",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation.",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/User"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error."
+                    }
+                }
+            }
+        },
+        "/user/{user_ID}": {
+            "get": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Get the information about a specific user.",
+                "operationId": "getUser",
+                "parameters": [
+                    {
+                        "name": "user_ID",
+                        "in": "path",
+                        "description": "Target user.",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation.",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    "406": {
+                        "description": "Not acceptable."
+                    },
+                    "500": {
+                        "description": "Internal server error."
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "Error": {
+            "required": [
+                "code",
+                "message"
+            ],
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "Authorization_Successful": {
+            "required": [
+                "access_token",
+                "expires_in",
+                "refresh_token",
+                "token_type"
+            ],
+            "properties": {
+                "access_token": {
+                    "type": "string"
+                },
+                "expires_in": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "refresh_token": {
+                    "type": "string"
+                },
+                "token_type": {
+                    "type": "string"
+                }
+            }
+        },
+        "Friendship_form": {
+            "required": [
+                "requester",
+                "user_requested"
+            ],
+            "properties": {
+                "requester": {
+                    "type": "integer"
+                },
+                "user_requested": {
+                    "type": "integer"
+                }
+            }
+        },
+        "Token_request_form": {
+            "required": [
+                "grant_type",
+                "client_id",
+                "client_secret",
+                "username",
+                "password"
+            ],
+            "properties": {
+                "grant_type": {
+                    "type": "string",
+                    "format": "utf8",
+                    "example": "password"
+                },
+                "client_id": {
+                    "type": "integer",
+                    "format": "int32",
+                    "example": "32"
+                },
+                "client_secret": {
+                    "type": "string",
+                    "format": "utf8"
+                },
+                "username": {
+                    "type": "string",
+                    "format": "utf8",
+                    "example": "john.appleseed@apple.com"
+                },
+                "password": {
+                    "type": "string",
+                    "format": "utf8"
+                },
+                "scope": {
+                    "type": "string",
+                    "format": "utf8"
+                }
+            }
+        },
+        "Friendships": {
+            "required": [
+                "id",
+                "requester",
+                "user_requested",
+                "status",
+                "created_at",
+                "updated_at"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "requester": {
+                    "type": "integer"
+                },
+                "user_requested": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "Ticket": {
+            "required": [
+                "id",
+                "unique_id",
+                "ownerFirstName",
+                "ownerLastName",
+                "user_id",
+                "event",
+                "artist",
+                "price",
+                "venue",
+                "city",
+                "image",
+                "date",
+                "description"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "unique_id": {
+                    "type": "string"
+                },
+                "ownerFirstName": {
+                    "type": "string"
+                },
+                "ownerLastName": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "event": {
+                    "type": "string"
+                },
+                "artist": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number",
+                    "format": "float"
+                },
+                "venue": {
+                    "type": "string"
+                },
+                "city": {
+                    "type": "string"
+                },
+                "date_event": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "TicketPost": {
+            "required": [
+                "id",
+                "unique_id",
+                "ownerFirstName",
+                "ownerLastName",
+                "user_id",
+                "event",
+                "artist",
+                "price",
+                "venue",
+                "city",
+                "image",
+                "date",
+                "description"
+            ],
+            "properties": {
+                "unique_id": {
+                    "type": "string"
+                },
+                "event": {
+                    "type": "string"
+                },
+                "artist": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number",
+                    "format": "float"
+                },
+                "venue": {
+                    "type": "string"
+                },
+                "city": {
+                    "type": "string"
+                },
+                "date_event": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                }
+            }
+        },
+        "User": {
+            "required": [
+                "id",
+                "first_name",
+                "last_name",
+                "email",
+                "address",
+                "city",
+                "province",
+                "postal_code",
+                "password"
+            ],
+            "type": "object",
+            "xml": {
+                "name": "User"
+            }
+        }
+    }
+}
